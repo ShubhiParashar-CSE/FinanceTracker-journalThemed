@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>my finance journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TOP BANNER -->
+  <div class="banner">
+    <div class="banner-dots"></div>
+    <div class="banner-content">
+      <p class="banner-label">✦ my finance journal ✦</p>
+      <h1>budget <span class="serif-italic">tracker</span></h1>
+      <p class="banner-quote">"a budget is telling your money where to go."</p>
+    </div>
+  </div>
+
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="page">
+
+    <!-- LEFT COLUMN-all the controls -->
+    <div class="col-left">
+
+      <!-- BALANCE -->
+      <div class="block">
+        <div class="block-label">💰 total balance</div>
+        <div class="balance-big" id="balance">₹0.00</div>
+        <div class="balance-row">
+          <div class="bal-chip green">
+            <span>▲ income</span>
+            <strong id="total-income">₹0.00</strong>
+          </div>
+          <div class="bal-chip rose">
+            <span>▼ spent</span>
+            <strong id="total-expense">₹0.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADD TRANSACTION -->
+      <div class="block">
+        <div class="block-label">✏️ add transaction</div>
+        <div class="two-col">
+          <select id="tx-type" onchange="toggleCatPicker()">
+            <option value="income">+ income</option>
+            <option value="expense">− expense</option>
+          </select>
+          <select id="tx-category" style="display:none;">
+            <option value="">pick category</option>
+          </select>
+        </div>
+        <input type="number" id="tx-amount" placeholder="amount (₹)" step="0.01" min="0"/>
+        <input type="text"   id="tx-desc"   placeholder="what was it for?"/>
+        <button class="btn-dark" onclick="addTransaction()">add entry ↵</button>
+      </div>
+
+      <!-- BUDGET SETUP — collapsible -->
+      <div class="block" id="budget-block">
+        <div class="block-header-row">
+          <div class="block-label" style="margin-bottom:0;">🗂️ budget setup</div>
+          <button class="toggle-btn" id="setup-toggle" style="display:none;" onclick="toggleSetup()">
+            minimise ▴
+          </button>
+        </div>
+        <div id="setup-body">
+          <p class="block-hint">set what % of your income goes to each category. must add up to 100%.</p>
+          <div class="three-col">
+            <input type="text"   id="cat-name" placeholder="category name"/>
+            <input type="number" id="cat-pct"  placeholder="%" min="0" max="100" style="max-width:68px;"/>
+            <button class="btn-outline" onclick="addCategory()">+ add</button>
+          </div>
+          <div id="cat-list"></div>
+          <div class="pct-row">
+            <span class="block-hint">allocated:</span>
+            <span id="pct-display" class="pct-display">0%</span>
+            <span class="block-hint">/ 100%</span>
+          </div>
+          <button class="btn-dark" onclick="saveBudget()">save & apply ✦</button>
+        </div>
+      </div>
+
+      <!-- ENVELOPES-shown after saving budget -->
+      <div class="block" id="envelopes-block" style="display:none;">
+        <div class="block-label">✉️ your envelopes</div>
+        <p class="block-hint">money reserved for each category — only spend from within!</p>
+        <div id="envelopes-list"></div>
+      </div>
+
+    </div><!-- /col-left -->
+
+    <!-- RIGHT COLUMN -transaction log as a notepad -->
+    <div class="col-right">
+      <div class="log-block">
+
+        <!-- Ring holes at the top, like a real notepad -->
+        <div class="notepad-rings">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+        </div>
+
+        <!-- Header with red margin line -->
+        <div class="notepad-header">
+          <div class="block-label" style="margin-bottom:0;">📋 transaction log</div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="notepad-tabs">
+          <button class="tab active" onclick="switchTab('all', this)">all</button>
+          <button class="tab" onclick="switchTab('income', this)">income</button>
+          <button class="tab" onclick="switchTab('expense', this)">expenses</button>
+        </div>
+
+        <!-- Ruled lines area — transactions go here -->
+        <div class="notepad-body">
+          <ul id="tx-list">
+            <li class="empty-note">no entries yet — add your first one ✦</li>
+          </ul>
+        </div>
+
+      </div>
+    </div><!-- /col-right -->
+
+  </div><!-- /page -->
+
+  <script src="script.js"></script>
+</body>
+</html>

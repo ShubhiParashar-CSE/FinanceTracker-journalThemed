@@ -1,0 +1,674 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/*FONTS & COLORS*/
+:root {
+  --cream:   #faf5ee;
+  --paper:   #fffdf8;
+  --beige:   #f0e8d8;
+  --beige2:  #e0d5c2;
+  --brown:   #3a2e22;
+  --brown2:  #6b5440;
+  --muted:   #a08870;
+  --green:   #5e9470;
+  --rose:    #c06070;
+  --sage:    #7a9e88;
+  --border:  #ddd0bc;
+
+  --sans:  'Nunito', sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
+}
+
+/* BODY-warm cream base*/
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--brown);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* 
+   TOP BANNER
+   Polka-dot background 
+  */
+.banner {
+  width: 100%;
+  padding: 40px 20px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  /* warm butter yellow background */
+  background-color: #f5e6c0;
+}
+
+/* The polka dots-radial-gradient  */
+.banner-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, #c8a86050 1.8px, transparent 1.8px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+
+/* Wavy bottom edge on the banner */
+.banner::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 28px;
+  background: var(--cream);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.banner-content { position: relative; z-index: 1; }
+
+.banner-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brown2);
+  margin-bottom: 14px;
+}
+
+.banner h1 {
+  font-family: var(--sans);
+  font-size: clamp(32px, 8vw, 46px);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* The italic serif word in the title */
+.serif-italic {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--brown2);
+}
+
+.banner-quote {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--brown2);
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/*PAGE WRAPPER — two-column layout
+  Left: controls  |  Right: transaction log
+*/
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Left column stacks blocks vertically */
+.col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Right column sticks while you scroll */
+.col-right {
+  position: sticky;
+  top: 24px;
+}
+
+/* Log block is scrollable so it never overflows the screen */
+.log-block {
+  max-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+#tx-list {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+}
+
+/* Mobile: single column */
+@media (max-width: 780px) {
+  .page { grid-template-columns: 1fr; padding: 16px 16px 60px; }
+  .col-right { position: static; }
+  .log-block { max-height: none; }
+  #tx-list   { overflow-y: visible; }
+}
+
+/* BLOCKS (the cards)Like journal sections*/
+.block {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px 20px 22px;
+  /* double shadow = stacked paper look */
+  box-shadow:
+    0 1px 0px var(--beige2),
+    0 4px 18px rgba(100, 70, 40, 0.08);
+}
+
+.block-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.block-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+/* Header row inside a block (for label + toggle button) */
+.block-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+/* BALANCE SECTION */
+.balance-big {
+  font-family: var(--serif);
+  font-size: clamp(38px, 10vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--brown);
+  margin-bottom: 18px;
+  line-height: 1;
+}
+
+.balance-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Income / Spent chips */
+.bal-chip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+}
+.bal-chip span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.bal-chip strong {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+}
+.bal-chip.green { background: #e8f4ec; border-color: #b8dcc4; }
+.bal-chip.green span, .bal-chip.green strong { color: var(--green); }
+.bal-chip.rose  { background: #f8eaec; border-color: #e8b8c0; }
+.bal-chip.rose  span, .bal-chip.rose  strong { color: var(--rose); }
+
+/* FORM INPUTS*/
+input, select {
+  display: block;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--brown);
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+input:focus, select:focus {
+  border-color: var(--sage);
+  background: var(--paper);
+}
+input::placeholder { color: var(--muted); }
+
+/* Two equal columns */
+.two-col { display: flex; gap: 10px; margin-bottom: 10px; }
+.two-col > * { margin-bottom: 0; }
+
+/* Three columns for category add row */
+.three-col { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.three-col input { margin-bottom: 0; }
+
+/* BUTTONS*/
+
+/* Main filled dark button */
+.btn-dark {
+  width: 100%;
+  padding: 13px;
+  background: var(--brown);
+  color: #fdf8f0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 11px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn-dark:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* Outline / ghost button */
+.btn-outline {
+  padding: 10px 16px;
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  color: var(--brown2);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.btn-outline:hover { background: var(--beige); }
+
+/* Small pill toggle button (minimise / show) */
+.toggle-btn {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  background: var(--beige);
+  border: 1.5px solid var(--beige2);
+  border-radius: 100px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.toggle-btn:hover { background: var(--beige2); }
+
+/* CATEGORY LIST (inside budget setup)*/
+#cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  animation: popIn 0.2s ease;
+}
+
+/* Colored square swatch */
+.swatch {
+  width: 13px; height: 13px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.cat-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.cat-pct {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.cat-del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+  padding: 0;
+}
+.cat-del:hover { color: var(--rose); }
+
+/* % allocated display */
+.pct-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pct-display {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brown);
+}
+.pct-display.ok   { color: var(--green); }
+.pct-display.over { color: var(--rose); }
+
+/* Collapse animation */
+#setup-body {
+  overflow: hidden;
+  max-height: 900px;
+  opacity: 1;
+  transition: max-height 0.4s ease, opacity 0.25s ease;
+}
+#setup-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ===========================================
+   ENVELOPE CARDS
+   =========================================== */
+#envelopes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.envelope {
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  padding: 16px 18px;
+  animation: popIn 0.22s ease;
+}
+
+.env-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.env-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--brown);
+}
+
+.env-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  background: rgba(255,255,255,0.6);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 10px;
+  text-transform: uppercase;
+}
+
+.env-numbers {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.env-num-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.env-mini-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.env-val {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brown);
+}
+.env-val.good  { color: var(--green); }
+.env-val.empty { color: var(--rose); }
+
+/* Progress bar */
+.env-bar-bg {
+  height: 7px;
+  background: var(--beige);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.env-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.55s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.env-depleted {
+  margin-top: 9px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--rose);
+}
+
+/* ===========================================
+   NOTEPAD LOG BLOCK
+   The right-column log looks like a real
+   lined notepad — red margin, ruled lines,
+   ring holes at top. All pure CSS!
+   =========================================== */
+
+/* Override the generic block style for the log */
+.log-block {
+  background: #fffef5;       /* slightly warm white, like real notepad paper */
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 0;                /* we'll handle padding inside */
+  overflow: hidden;          /* clip the rings and lines neatly */
+  box-shadow:
+    0 1px 0px var(--beige2),
+    0 4px 18px rgba(100, 70, 40, 0.08);
+}
+
+/* Ring holes at the top — three circles, pure CSS */
+.notepad-rings {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 40px;
+  background: var(--beige);
+  border-bottom: 2px solid var(--border);
+}
+
+.ring {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--border2);
+  /* inner shadow makes it look like a real hole */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* The notepad header (title + label) */
+.notepad-header {
+  padding: 14px 18px 10px 52px; /* 52px left = space after the red margin line */
+  border-bottom: 1.5px solid #e8d4d0;
+  position: relative;
+}
+
+/* Red margin line — the classic notepad line on the left */
+.notepad-header::before,
+.notepad-body::before {
+  content: '';
+  position: absolute;
+  left: 38px;
+  top: 0; bottom: 0;
+  width: 1.5px;
+  background: #e8a0a0; /* soft red, not harsh */
+}
+
+.notepad-header { position: relative; }
+
+/* Tabs row sits just below the header */
+.notepad-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 18px 10px 52px;
+  border-bottom: 1px solid #e8e0d0;
+  position: relative;
+}
+
+/* Red line continues through tabs */
+.notepad-tabs::before {
+  content: '';
+  position: absolute;
+  left: 38px; top: 0; bottom: 0;
+  width: 1.5px;
+  background: #e8a0a0;
+}
+
+.tab {
+  padding: 5px 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab.active {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: #fdf8f0;
+}
+
+/* The scrollable list area */
+.notepad-body {
+  position: relative;
+  overflow-y: auto;
+  flex: 1;
+  /* Horizontal ruled lines — repeating-linear-gradient is the trick!
+     Every 48px we draw a thin beige line, like real notebook paper */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 47px,
+    #e8e0d0 47px,
+    #e8e0d0 48px
+  );
+  background-attachment: local; /* lines scroll with content */
+}
+
+/* ===========================================
+   TRANSACTION LIST — notepad rows
+   =========================================== */
+#tx-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tx-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Each row is exactly 48px tall to sit on the ruled lines */
+  min-height: 48px;
+  padding: 6px 14px 6px 52px; /* 52px left keeps content past the red margin */
+  animation: popIn 0.2s ease;
+  /* no border — the background lines act as separators */
+  border: none;
+  background: transparent;
+}
+
+.tx-item:hover {
+  background: rgba(240, 232, 210, 0.4); /* subtle hover highlight */
+}
+
+.tx-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.tx-desc { font-size: 13px; font-weight: 600; color: var(--brown); }
+.tx-meta {
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tx-pill {
+  padding: 1px 7px;
+  border-radius: 100px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tx-amt {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+}
+.tx-amt.income  { color: var(--green); }
+.tx-amt.expense { color: var(--rose);  }
+
+   /*EMPTY STATE*/
+
+.empty-note {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  /* sits on the first ruled line, past the red margin */
+  padding: 14px 14px 14px 52px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+/* ANIMATION*/
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* SCROLLBAR*/
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--beige2); border-radius: 10px; }
